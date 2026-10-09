@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Local Phase: Production-ready Static Website Hosting on AWS S3'
+
+# NOTE: The BucketPolicy (public read access) is intentionally excluded from this template.
+# AWS::EarlyValidation::PropertyValidation hook in this account blocks CloudFormation from
+# deploying any bucket policy with Principal: '*'. The public read policy is therefore
+# applied separately via the AWS CLI after the stack is created. See README for full steps.
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: 'The globally unique name for your static website S3 bucket'
+    Default: 'your-unique-bucket-name' # 🚨 SUBSTITUTE: Replace with your own globally unique S3 bucket name
+                                        # Example: 'my-portfolio-site-123456789012'
+                                        # Must be lowercase, no spaces, globally unique across all AWS accounts
+
+Resources:
+  # Block A: Provisions the base S3 Bucket container
+  StaticWebsiteBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName
+      # Block B: Broadly overrides global S3 blocks to allow policy-based public mapping
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      # Block C: Turns the bucket into an active web routing engine
+      WebsiteConfiguration:
+        IndexDocument: index.html   # SUBSTITUTE: Replace with your main landing page filename if different
+        ErrorDocument: error.html   # SUBSTITUTE: Replace with your custom error page filename if different
+      Tags:
+        - Key: Name
+          Value: 'your-project-name' # SUBSTITUTE: Replace with a descriptive name for your project
+        - Key: Environment
+          Value: 'Local-Testing'     # SUBSTITUTE: Replace with your environment e.g. 'Production', 'Staging'
+
+Outputs:
+  WebsiteURL:
+    Description: 'The live public HTTP URL of your deployed static website'
+    Value: !GetAtt StaticWebsiteBucket.WebsiteURL
