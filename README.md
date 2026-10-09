@@ -1,7 +1,5 @@
 # Deploying-a-Static-Website-to-AWS-S3-Using-CloudFormation-and-the-AWS-CLI
 
-# Deploying a Static Website to AWS S3 Using CloudFormation and the AWS CLI
-
 This repository details the configuration files and deployment steps required to provision a production-ready, highly secure public static website on AWS S3 using native **AWS CloudFormation** blueprints.
 
 By leveraging the **AWS CLI**, the infrastructure stack creation and file synchronization cycles are managed entirely from a local developer environment inside **Visual Studio Code**, establishing a verified architectural baseline before introducing automated CI/CD pipeline triggers.
